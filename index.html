@@ -9,11 +9,10 @@
 </head>
 <body>
 
-<!-- Login Section -->
+<!-- Login -->
 <div id="login-area" class="container">
   <h2>Login / Register</h2>
   <div id="login-msg" class="message"></div>
-
   <input id="identifier" placeholder="ইমেইল বা ফোন নম্বর" />
   <input id="password" type="password" placeholder="পাসওয়ার্ড" />
   <button id="login-btn"><i class="fa fa-sign-in-alt"></i> Login / Register</button>
@@ -24,11 +23,14 @@
   </div>
 </div>
 
-<!-- Notepad Section -->
+<!-- Notepad -->
 <div id="notepad-area" class="container" style="display:none;">
   <div class="topbar">
     <h3><i class="fa fa-sticky-note"></i> My Notepad</h3>
-    <button id="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</button>
+    <div>
+      <button id="mode-toggle">Dark Mode</button>
+      <button id="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</button>
+    </div>
   </div>
 
   <div class="layout">
@@ -60,4 +62,4 @@
 
 <script src="app.js"></script>
 </body>
-  </html>
+</html>
