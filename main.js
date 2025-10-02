@@ -47,6 +47,14 @@ document.getElementById('logout-btn').onclick = () => {
   document.getElementById('login-area').style.display = 'block';
 };
 
+// ===== Dark / Light Mode =====
+const body = document.body;
+const modeBtn = document.getElementById('mode-toggle');
+modeBtn.onclick = () => {
+  body.classList.toggle('dark');
+  modeBtn.innerText = body.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+};
+
 // ======= Notepad functions =======
 function showNotepad(){
   document.getElementById('login-area').style.display = 'none';
@@ -72,7 +80,7 @@ function renderCategories(){
   const catList = document.getElementById('category-list');
   catList.innerHTML = '';
   Array.from(categories).forEach(c=>{
-    const li = document.createElement('li');
+    const li = document.createElement('const li = document.createElement('li');
     li.innerText = c;
     li.dataset.cat = c;
     li.onclick = ()=>{
@@ -84,6 +92,8 @@ function renderCategories(){
     catList.appendChild(li);
   });
 
+  enableCategoryDrag();
+
   const sel = document.getElementById('note-cat');
   sel.innerHTML = '';
   Array.from(categories).forEach(c=>{
@@ -94,6 +104,27 @@ function renderCategories(){
   });
 }
 
+// ===== Drag & Drop Categories =====
+function enableCategoryDrag(){
+  const catItems = document.querySelectorAll('.categories li');
+  catItems.forEach(item=>{
+    item.draggable = true;
+    item.ondragstart = (e)=>{ e.dataTransfer.setData('text/plain', item.dataset.cat); }
+    item.ondragover = (e)=> e.preventDefault();
+    item.ondrop = (e)=>{
+      const fromCat = e.dataTransfer.getData('text/plain');
+      const toCat = item.dataset.cat;
+      const arr = Array.from(categories);
+      const fromIdx = arr.indexOf(fromCat);
+      const toIdx = arr.indexOf(toCat);
+      arr.splice(toIdx, 0, arr.splice(fromIdx,1)[0]);
+      categories = new Set(arr);
+      renderCategories();
+    }
+  });
+}
+
+// ===== Notes CRUD =====
 document.getElementById('add-cat-btn').onclick = () => {
   const name = document.getElementById('new-cat').value.trim();
   if (!name) return;
@@ -102,9 +133,7 @@ document.getElementById('add-cat-btn').onclick = () => {
   renderCategories();
 };
 
-document.getElementById('new-note-btn').onclick = () => {
-  createNewNote();
-};
+document.getElementById('new-note-btn').onclick = createNewNote;
 
 function createNewNote(){
   const newNote = {id: Date.now(), title:'Untitled', content:'', category:'General', updated: new Date().toLocaleString()};
