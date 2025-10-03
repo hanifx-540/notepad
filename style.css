@@ -1,42 +1,105 @@
+/* GENERAL */
 body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  transition: background 0.5s, color 0.5s;
+  font-family: 'Segoe UI', sans-serif;
+  margin:0;
+  padding:0;
+  background: linear-gradient(135deg,#6a11cb,#2575fc);
+  color:#333;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition: background 0.5s;
 }
-body.dark {
-  background: #1e1e1e;
-  color: #f0f0f0;
+
+/* CONTAINER */
+.container {
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  width:90%;
+  max-width:700px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.25);
+  animation:fadeIn 1s ease;
 }
-.card {
-  width: 300px;
-  margin: 100px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  animation: fadeIn 0.8s;
+
+/* INPUTS & TEXTAREA */
+input, textarea {
+  width:95%;
+  margin:10px 0;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  transition:all 0.3s ease;
 }
-body.dark .card { background: #333; }
-input, textarea, select, button {
-  width: 100%; padding: 10px; margin: 6px 0;
-  border-radius: 6px; border: 1px solid #ccc;
+input:focus, textarea:focus{
+  border-color:#6a11cb;
+  outline:none;
 }
+
+/* BUTTONS */
 button {
-  cursor: pointer; background: #007bff; color: white; border: none;
+  background:#6a11cb;
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  margin:5px 0;
+  transition:0.4s;
 }
-button:hover { background: #0056b3; }
-#notepad-area {
-  display: flex; height: 100vh;
+button:hover{
+  background:#2575fc;
+  transform:scale(1.05);
 }
-.sidebar {
-  width: 250px; background: #fafafa; padding: 15px; overflow-y: auto;
+
+/* MSG */
+.msg{color:red;margin-top:5px;font-size:14px;}
+
+/* TOP BAR */
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+
+/* NOTEPAD LAYOUT */
+.notepad-container{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
-body.dark .sidebar { background: #2b2b2b; }
-.editor {
-  flex: 1; padding: 15px; display: flex; flex-direction: column;
+
+.notes-section, .social-sections{
+  flex:1 1 300px;
 }
-#note-tabs button {
-  margin: 2px; padding: 6px; border-radius: 6px;
+
+textarea{height:100px;resize:vertical;}
+
+/* SOCIAL MEDIA CARDS */
+.social-card{
+  background:#f0f0f0;
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  transition:0.3s;
 }
-#note-tabs button.active { background: green; color: white; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+.social-card:hover{transform:scale(1.02);}
+
+/* DARK MODE */
+body.dark{
+  background:#121212;color:#fff;
+}
+body.dark .container{background:#1e1e1e;color:#fff;}
+body.dark input, body.dark textarea{background:#333;color:#fff;border:1px solid #555;}
+body.dark .social-card{background:#2a2a2a;color:#fff;}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* RESPONSIVE */
+@media(max-width:650px){
+  .notepad-container{flex-direction:column;}
+  input,textarea{width:100%;}
+}
