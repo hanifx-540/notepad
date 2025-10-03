@@ -1,65 +1,59 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced Notepad</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <title>hanifx secure Notepad</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- Login -->
-<div id="login-area" class="container">
-  <h2>Login / Register</h2>
-  <div id="login-msg" class="message"></div>
-  <input id="identifier" placeholder="ইমেইল বা ফোন নম্বর" />
-  <input id="password" type="password" placeholder="পাসওয়ার্ড" />
-  <button id="login-btn"><i class="fa fa-sign-in-alt"></i> Login / Register</button>
-
-  <div id="verify-section" style="display:none; margin-top:10px;">
-    <input id="verify-code" placeholder="Verification কোড লিখুন" />
-    <button id="verify-btn"><i class="fa fa-check"></i> Verify & Open Notepad</button>
+  <!-- Login Area -->
+  <div id="login-area" class="card">
+    <h2>Login</h2>
+    <input id="identifier" type="text" placeholder="Email বা Phone Number">
+    <input id="password" type="password" placeholder="Password">
+    <button id="login-btn">Login</button>
+    <p id="login-msg"></p>
+    <p>New here? <a href="#" id="create-account">Create Account</a></p>
   </div>
-</div>
 
-<!-- Notepad -->
-<div id="notepad-area" class="container" style="display:none;">
-  <div class="topbar">
-    <h3><i class="fa fa-sticky-note"></i> My Notepad</h3>
-    <div>
+  <!-- Verification -->
+  <div id="verify-section" class="card" style="display:none;">
+    <h2>Verification</h2>
+    <input id="verify-code" type="text" placeholder="Enter verification code">
+    <button id="verify-btn">Verify</button>
+    <p id="verify-msg"></p>
+  </div>
+
+  <!-- Notepad -->
+  <div id="notepad-area" style="display:none;">
+    <div class="topbar">
+      <button id="logout-btn">Logout</button>
       <button id="mode-toggle">Dark Mode</button>
-      <button id="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="sidebar">
+      <h3>Categories</h3>
+      <ul id="category-list"></ul>
+      <input id="new-cat" placeholder="New Category">
+      <button id="add-cat-btn">Add</button>
+
+      <h3>Notes</h3>
+      <input id="search-note" placeholder="Search note">
+      <ul id="notes-list"></ul>
+      <button id="new-note-btn">+ New Note</button>
+    </div>
+
+    <div class="editor">
+      <div id="note-tabs"></div>
+      <input id="note-title" placeholder="Note Title">
+      <select id="note-cat"></select>
+      <textarea id="note-content" placeholder="Write your note here..."></textarea>
+      <p id="note-timestamp"></p>
+      <button id="save-note-btn">Save</button>
+      <button id="delete-note-btn">Delete</button>
     </div>
   </div>
 
-  <div class="layout">
-    <aside>
-      <div class="add-category">
-        <input id="new-cat" placeholder="নতুন category" />
-        <button id="add-cat-btn"><i class="fa fa-plus"></i></button>
-      </div>
-      <div id="category-list" class="categories"></div>
-      <hr>
-      <button id="new-note-btn"><i class="fa fa-plus"></i> New Note</button>
-      <input id="search-note" placeholder="Search notes..." />
-      <ul id="notes-list"></ul>
-    </aside>
-
-    <main>
-      <div class="note-tabs" id="note-tabs"></div>
-      <input id="note-title" placeholder="নোট শিরোনাম" />
-      <select id="note-cat"></select>
-      <textarea id="note-content" placeholder="নোট লিখুন..."></textarea>
-      <div class="note-buttons">
-        <button id="save-note-btn"><i class="fa fa-save"></i> Save</button>
-        <button id="delete-note-btn"><i class="fa fa-trash"></i> Delete</button>
-      </div>
-      <div id="note-timestamp"></div>
-    </main>
-  </div>
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
-</html>
+  </html>
