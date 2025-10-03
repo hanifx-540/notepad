@@ -1,59 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>hanifx secure Notepad</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hanifx Notepad secure</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Login Area -->
-  <div id="login-area" class="card">
-    <h2>Login</h2>
-    <input id="identifier" type="text" placeholder="Email বা Phone Number">
-    <input id="password" type="password" placeholder="Password">
-    <button id="login-btn">Login</button>
-    <p id="login-msg"></p>
-    <p>New here? <a href="#" id="create-account">Create Account</a></p>
-  </div>
 
-  <!-- Verification -->
-  <div id="verify-section" class="card" style="display:none;">
-    <h2>Verification</h2>
-    <input id="verify-code" type="text" placeholder="Enter verification code">
+<!-- LOGIN AREA -->
+<div id="login-area" class="container">
+  <h1>secure Notepad</h1>
+  <input type="text" id="identifier" placeholder="Email or Phone">
+  <input type="password" id="password" placeholder="Password">
+  <button id="login-btn">Login / Create Account</button>
+  <p id="login-msg" class="msg"></p>
+
+  <div id="verify-section" style="display:none;">
+    <input type="text" id="verify-code" placeholder="Enter Verification Code">
     <button id="verify-btn">Verify</button>
-    <p id="verify-msg"></p>
+  </div>
+</div>
+
+<!-- NOTEPAD AREA -->
+<div id="notepad-area" class="container" style="display:none;">
+  <div class="top-bar">
+    <h2>My Notepad</h2>
+    <button id="mode-toggle">Dark Mode</button>
+    <button id="logout-btn">Logout</button>
   </div>
 
-  <!-- Notepad -->
-  <div id="notepad-area" style="display:none;">
-    <div class="topbar">
-      <button id="logout-btn">Logout</button>
-      <button id="mode-toggle">Dark Mode</button>
-    </div>
+  <div class="notepad-container">
 
-    <div class="sidebar">
-      <h3>Categories</h3>
-      <ul id="category-list"></ul>
-      <input id="new-cat" placeholder="New Category">
-      <button id="add-cat-btn">Add</button>
-
-      <h3>Notes</h3>
-      <input id="search-note" placeholder="Search note">
+    <!-- NORMAL NOTES -->
+    <div class="notes-section">
+      <h3>General Notes</h3>
+      <textarea id="note-text" placeholder="Write your note here..."></textarea>
+      <input type="text" id="note-category" placeholder="Category">
+      <button id="save-note-btn">Save Note</button>
       <ul id="notes-list"></ul>
-      <button id="new-note-btn">+ New Note</button>
     </div>
 
-    <div class="editor">
-      <div id="note-tabs"></div>
-      <input id="note-title" placeholder="Note Title">
-      <select id="note-cat"></select>
-      <textarea id="note-content" placeholder="Write your note here..."></textarea>
-      <p id="note-timestamp"></p>
-      <button id="save-note-btn">Save</button>
-      <button id="delete-note-btn">Delete</button>
+    <!-- SOCIAL MEDIA SECTIONS -->
+    <div class="social-sections">
+      <h3>Social Media Notes</h3>
+      <div id="social-container"></div>
     </div>
+
   </div>
+</div>
 
-  <script src="main.js"></script>
+<script src="main.js"></script>
 </body>
-  </html>
+</html>
