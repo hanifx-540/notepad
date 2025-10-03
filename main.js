@@ -1,177 +1,121 @@
-// ===== Data Storage =====
-let users = JSON.parse(localStorage.getItem('users') || '[]');
-let currentUser = null;
-let tempCode = null;
-let notes = [];
-let categories = new Set(['All']);
-let activeNoteId = null;
+// ===== STORAGE =====
+let users = JSON.parse(localStorage.getItem('users') || '[]');  
+let currentUser = null;  
+let tempCode = null;  
+let notes = [];  
+let categories = new Set(['All']);  
+let socialMedia = ["Facebook","Instagram","Twitter","LinkedIn","WhatsApp","TikTok","YouTube","Snapchat","Pinterest","Reddit","Discord"];
+let socialData = {};
 
-// ===== Helper =====
-const msg = (id, t)=> document.getElementById(id).innerText = t;
+// ===== MSG =====
+const msg = t => document.getElementById('login-msg').innerText = t;
 
-// ===== Login / Register =====
-document.getElementById('login-btn').onclick = () => {
-  const identifier = document.getElementById('identifier').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if (!identifier || !password) return msg('login-msg','সব ফিল্ড পূরণ করুন');
+// ===== LOGIN =====
+document.getElementById('login-btn').onclick = ()=>{
+  const idf = document.getElementById('identifier').value.trim();
+  const pw = document.getElementById('password').value;
+  if(!idf || !pw) return msg('সব ফিল্ড পূরণ করুন');
 
-  let user = users.find(u => u.identifier === identifier);
-  if (!user){
-    msg('login-msg','Account নেই, নিচে Create Account ব্যবহার করুন');
-    return;
-  }
-  if (user.password !== password){
-    return msg('login-msg','পাসওয়ার্ড ভুল');
-  }
+  let user = users.find(u=>u.identifier===idf);
+  if(!user){ // create
+    user={id:Date.now(), identifier:idf, password:pw};
+    users.push(user);
+    localStorage.setItem('users',JSON.stringify(users));
+  }else if(user.password!==pw){ return msg('পাসওয়ার্ড ভুল'); }
 
   currentUser = user;
   tempCode = Math.floor(100000 + Math.random()*900000).toString();
   alert(`আপনার verification কোড: ${tempCode}`);
-  document.getElementById('verify-section').style.display = 'block';
+  document.getElementById('verify-section').style.display='block';
+  msg('Verification কোড পাঠানো হয়েছে।');
 };
 
-document.getElementById('create-account').onclick = ()=>{
-  const identifier = document.getElementById('identifier').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if (!identifier || !password) return msg('login-msg','সব ফিল্ড পূরণ করুন');
-  if (users.find(u=>u.identifier===identifier)) return msg('login-msg','User already exists');
-  let user = {id: Date.now(), identifier, password};
-  users.push(user);
-  localStorage.setItem('users', JSON.stringify(users));
-  msg('login-msg','Account তৈরি হয়েছে, এবার Login করুন');
+document.getElementById('verify-btn').onclick=()=>{
+  const code=document.getElementById('verify-code').value.trim();
+  if(code===tempCode){ tempCode=null; msg(''); showNotepad(); }
+  else msg('ভুল কোড, আবার চেষ্টা করুন।');
 };
 
-document.getElementById('verify-btn').onclick = () => {
-  const code = document.getElementById('verify-code').value.trim();
-  if (code === tempCode){
-    tempCode = null;
-    msg('verify-msg','');
-    showNotepad();
-  } else {
-    msg('verify-msg','ভুল কোড, আবার চেষ্টা করুন।');
-  }
-};
-
-document.getElementById('logout-btn').onclick = () => {
-  currentUser=null; notes=[]; categories=new Set(['All']); activeNoteId=null;
+// ===== LOGOUT =====
+document.getElementById('logout-btn').onclick=()=>{
+  currentUser=null; notes=[]; categories=new Set(['All']); socialData={};
   document.getElementById('notepad-area').style.display='none';
   document.getElementById('login-area').style.display='block';
 };
 
-// ===== Dark / Light Mode =====
+// ===== DARK MODE =====
 const body=document.body;
-document.getElementById('mode-toggle').onclick=()=>{
+const modeBtn=document.getElementById('mode-toggle');
+modeBtn.onclick=()=>{
   body.classList.toggle('dark');
-  document.getElementById('mode-toggle').innerText=body.classList.contains('dark')?'Light Mode':'Dark Mode';
+  modeBtn.innerText=body.classList.contains('dark')?'Light Mode':'Dark Mode';
 };
 
-// ===== Notepad =====
+// ===== NOTEPAD =====
 function showNotepad(){
   document.getElementById('login-area').style.display='none';
-  document.getElementById('verify-section').style.display='none';
-  document.getElementById('notepad-area').style.display='flex';
+  document.getElementById('notepad-area').style.display='block';
   loadNotes();
+  loadSocialMedia();
 }
 
+// ===== GENERAL NOTES =====
 function loadNotes(){
-  const stored=localStorage.getItem(`notes_${currentUser.id}`);
-  notes=stored?JSON.parse(stored):[];
-  categories=new Set(['All']);
-  notes.forEach(n=>categories.add(n.category||'General'));
-  renderCategories();
-  renderNotesList();
-  renderTabs();
+  const stored = localStorage.getItem(`notes_${currentUser.id}`);
+  notes = stored ? JSON.parse(stored) : [];
+  renderNotes();
 }
 
-function saveNotes(){ localStorage.setItem(`notes_${currentUser.id}`, JSON.stringify(notes)); }
-
-function renderCategories(){
-  const catList=document.getElementById('category-list');
-  catList.innerHTML='';
-  Array.from(categories).forEach(c=>{
+function renderNotes(){
+  const list=document.getElementById('notes-list');
+  list.innerHTML='';
+  notes.forEach((n,i)=>{
     const li=document.createElement('li');
-    li.innerText=c;
-    li.onclick=()=>renderNotesList(c);
-    catList.appendChild(li);
-  });
-  const sel=document.getElementById('note-cat');
-  sel.innerHTML='';
-  Array.from(categories).forEach(c=>{
-    const op=document.createElement('option');
-    op.value=c; op.innerText=c;
-    sel.appendChild(op);
+    li.innerText=n.text.substring(0,30)+'...';
+    li.style.cursor='pointer';
+    li.onclick=()=>{document.getElementById('note-text').value=n.text;document.getElementById('note-category').value=n.category||'';}
+    list.appendChild(li);
   });
 }
 
-document.getElementById('add-cat-btn').onclick=()=>{
-  const name=document.getElementById('new-cat').value.trim();
-  if (!name) return;
-  categories.add(name);
-  renderCategories();
-  document.getElementById('new-cat').value='';
+document.getElementById('save-note-btn').onclick=()=>{
+  const txt=document.getElementById('note-text').value.trim();
+  const cat=document.getElementById('note-category').value.trim()||'General';
+  if(!txt) return alert('Note খালি থাকতে পারবে না');
+  notes.push({text:txt,category:cat});
+  localStorage.setItem(`notes_${currentUser.id}`,JSON.stringify(notes));
+  renderNotes();
+  document.getElementById('note-text').value='';
+  document.getElementById('note-category').value='';
 };
 
-document.getElementById('new-note-btn').onclick=createNewNote;
-function createNewNote(){
-  const n={id:Date.now(),title:'Untitled',content:'',category:'General',updated:new Date().toLocaleString()};
-  notes.push(n); activeNoteId=n.id; renderTabs(); renderNotesList(); openNote(n.id); saveNotes();
-}
+// ===== SOCIAL MEDIA =====
+function loadSocialMedia(){
+  const container=document.getElementById('social-container');
+  container.innerHTML='';
+  const stored = localStorage.getItem(`social_${currentUser.id}`);
+  socialData = stored ? JSON.parse(stored) : {};
 
-function renderNotesList(filter='All'){
-  const ul=document.getElementById('notes-list');
-  ul.innerHTML='';
-  const search=document.getElementById('search-note').value.toLowerCase();
-  notes.filter(n=>(filter==='All'||n.category===filter)&&(n.title.toLowerCase().includes(search)||n.content.toLowerCase().includes(search)))
-       .forEach(n=>{
-    const li=document.createElement('li');
-    li.innerText=n.title+' ('+(n.category||'General')+')';
-    li.onclick=()=>openNote(n.id);
-    ul.appendChild(li);
+  socialMedia.forEach(name=>{
+    if(!socialData[name]) socialData[name]={username:'',password:'',note:''};
+    const card=document.createElement('div');
+    card.className='social-card';
+    card.innerHTML=`
+      <h4>${name}</h4>
+      <input type="text" placeholder="Username" value="${socialData[name].username}" class="sm-username">
+      <input type="text" placeholder="Password" value="${socialData[name].password}" class="sm-password">
+      <textarea placeholder="Your Note">${socialData[name].note}</textarea>
+      <button>Save</button>
+    `;
+    const btn=card.querySelector('button');
+    btn.onclick=()=>{
+      const username=card.querySelector('.sm-username').value;
+      const password=card.querySelector('.sm-password').value;
+      const note=card.querySelector('textarea').value;
+      socialData[name]={username,password,note};
+      localStorage.setItem(`social_${currentUser.id}`,JSON.stringify(socialData));
+      alert(`${name} data saved!`);
+    };
+    container.appendChild(card);
   });
-}
-document.getElementById('search-note').oninput=()=>renderNotesList();
-
-function renderTabs(){
-  const tabs=document.getElementById('note-tabs'); tabs.innerHTML='';
-  notes.forEach(n=>{
-    const b=document.createElement('button');
-    b.innerText=n.title; b.classList.toggle('active',n.id===activeNoteId);
-    b.onclick=()=>openNote(n.id);
-    tabs.appendChild(b);
-  });
-}
-
-function openNote(id){
-  const n=notes.find(x=>x.id===id); if(!n) return;
-  activeNoteId=n.id;
-  document.getElementById('note-title').value=n.title;
-  document.getElementById('note-content').value=n.content;
-  document.getElementById('note-cat').value=n.category;
-  document.getElementById('note-timestamp').innerText='Updated: '+n.updated;
-  renderTabs();
-}
-
-function saveCurrentNote(){
-  if (!activeNoteId) return createNewNote();
-  const title=document.getElementById('note-title').value||'Untitled';
-  const content=document.getElementById('note-content').value||'';
-  const category=document.getElementById('note-cat').value||'General';
-  notes=notes.map(n=>n.id===activeNoteId?{...n,title,content,category,updated:new Date().toLocaleString()}:n);
-  categories.add(category); renderCategories(); renderNotesList(); renderTabs(); saveNotes();
-  document.getElementById('note-timestamp').innerText='Updated: '+new Date().toLocaleString();
-}
-
-document.getElementById('save-note-btn').onclick=saveCurrentNote;
-document.getElementById('note-title').oninput=saveCurrentNote;
-document.getElementById('note-content').oninput=saveCurrentNote;
-document.getElementById('note-cat').onchange=saveCurrentNote;
-
-document.getElementById('delete-note-btn').onclick=()=>{
-  if(!activeNoteId) return;
-  notes=notes.filter(n=>n.id!==activeNoteId);
-  activeNoteId=notes.length?notes[0].id:null;
-  renderTabs(); renderNotesList();
-  if(activeNoteId) openNote(activeNoteId);
-  else {document.getElementById('note-title').value=''; document.getElementById('note-content').value='';}
-  saveNotes();
-};
+      }
