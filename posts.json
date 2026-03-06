@@ -1,0 +1,17 @@
+[
+{
+"id":1,
+"title":"The Dark Room",
+"desc":"A strange room nobody should enter",
+"file":"posts/story1.md",
+"date":"2026-03-06"
+},
+
+{
+"id":2,
+"title":"Midnight Call",
+"desc":"A phone call at midnight changed everything",
+"file":"posts/story2.md",
+"date":"2026-03-05"
+}
+]
