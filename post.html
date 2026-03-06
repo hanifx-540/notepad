@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Unknown Story</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Unknown Story</h1>
+
+</header>
+
+<div id="story"></div>
+
+<script>
+
+const id=new URLSearchParams(location.search).get("id")
+
+fetch("posts.json")
+.then(r=>r.json())
+.then(posts=>{
+
+let post=posts.find(p=>p.id==id)
+
+fetch(post.file)
+.then(r=>r.text())
+.then(text=>{
+
+document.getElementById("story").innerHTML=
+text.replace(/\n/g,"<br>")
+
+})
+
+})
+
+</script>
+
+</body>
+</html>
